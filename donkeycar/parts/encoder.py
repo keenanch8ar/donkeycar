@@ -1,12 +1,11 @@
-import re
+#!/usr/bin/env python3
 import time
-from datetime import datetime
 
 class RotaryEncoder():
-    def __init__(self, mm_per_tick=0.306096, pin=27, poll_delay=0.0166, debug=False):
+    def __init__(self, mm_per_tick=0.306096, pin=8, poll_delay=0.0166, debug=False):
         import RPi.GPIO as GPIO
         GPIO.setmode(GPIO.BCM)
-        GPIO.setup(pin, GPIO.IN)
+        GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(pin, GPIO.RISING, callback=self.isr)
 
         # initialize the odometer values
@@ -28,6 +27,7 @@ class RotaryEncoder():
 
             #save the ticks and reset the counter
             ticks = self.counter
+            print (ticks)
             self.counter = 0
 
             #save off the last time interval and reset the timer
@@ -45,13 +45,13 @@ class RotaryEncoder():
             self.meters_per_second = velocity
 
             #console output for debugging
-            if(self.debug):
-                print('seconds:', seconds)
-                print('distance:', distance)
-                print('velocity:', velocity)
+            #if(self.debug):
+			# print('seconds:', seconds)
+			# print('distance:', distance)
+			# print('velocity:', velocity)
 
-                print('distance (m):', round(self.meters, 4))
-                print('velocity (m/s):', self.meters_per_second)
+			# print('distance (m):', round(self.meters, 4))
+			# print('velocity (m/s):', self.meters_per_second)
 
             time.sleep(self.poll_delay)
 
